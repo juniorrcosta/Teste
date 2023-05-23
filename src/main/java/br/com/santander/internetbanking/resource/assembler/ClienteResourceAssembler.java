@@ -38,12 +38,22 @@ public class ClienteResourceAssembler  extends RepresentationModelAssemblerSuppo
 		return entity;
 	}
 	
-	public List<Cliente> toEntities(List<ClienteResource> entities) {
-        return entities != null ? StreamSupport.stream(entities.spliterator(), false).map(this::toEntity).collect(Collectors.toList()) : new ArrayList<>();
+	public List<Cliente> toEntities(Iterable<ClienteResource> resources) {
+        return StreamSupport.stream(resources.spliterator(), false)
+                .map(this::toEntity)
+                .collect(Collectors.toList());
     }
 	
-	public List<ClienteResource> toResources(List<Cliente> entities) {
-        return entities != null ? StreamSupport.stream(entities.spliterator(), false).map(this::toResource).collect(Collectors.toList()) : new ArrayList<>();
-    }
+	 public List<Cliente> toEntities(List<ClienteResource> resources) {
+	        return resources.stream()
+	                .map(this::toEntity)
+	                .collect(Collectors.toList());
+	    }
+	
+	 public List<ClienteResource> toResources(Iterable<Cliente> entities) {
+	        return StreamSupport.stream(entities.spliterator(), false)
+	                .map(this::toModel)
+	                .collect(Collectors.toList());
+	    }
 	
 }

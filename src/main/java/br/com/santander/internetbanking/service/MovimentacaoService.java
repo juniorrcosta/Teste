@@ -20,33 +20,23 @@ public class MovimentacaoService {
 	@Autowired
     private MovimentacaoRepository extratoRepository;
 
-
-    public Page<MovimentacaoResource> obterListaTransacoes(Pageable paginacao, String dataMovimentacao, TipoOperacao tipoOperacao) {
-        Page<MovimentacaoResource> map;
-
-
-        if(null != dataMovimentacao && !dataMovimentacao.isBlank()){
-            LocalDate date = null;
-            try{
+	public Page<MovimentacaoResource> obterLista(Pageable paginacao, String dataMovimentacao, TipoOperacao tipoOperacao) {
+        LocalDate date = null;
+        if (dataMovimentacao != null && !dataMovimentacao.isBlank()) {
+            try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 date = LocalDate.parse(dataMovimentacao, formatter);
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new ResourceBusinessException(HttpStatus.BAD_REQUEST, "400", "Data inválida");
             }
-            map = extratoRepository
-                    .findByDataTransacaoAndTipoOperacao(paginacao, date, tipoOperacao)
-                    .map(MovimentacaoResource::new);
-        }else{
-            map = extratoRepository
-                    .findByTipoOperacao(paginacao, tipoOperacao)
-                    .map(MovimentacaoResource::new);
         }
 
-        return map;
+        return extratoRepository.findByDataTransacaoAndTipoOperacao(paginacao, date, tipoOperacao)
+                .map(MovimentacaoResource::new);
     }
 
     public Page<MovimentacaoResource> obterListaTransacoes() {
-         return extratoRepository.findAll(Pageable.ofSize(10))
-                 .map(MovimentacaoResource::new);
+        return extratoRepository.findAll(Pageable.ofSize(10))
+                .map(MovimentacaoResource::new);
     }
 }

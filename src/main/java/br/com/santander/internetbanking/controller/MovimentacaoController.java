@@ -42,18 +42,18 @@ public class MovimentacaoController {
 
     @Operation(summary = "Obter lista de transações")
     @GetMapping
-    public ResponseEntity<Page<MovimentacaoResource>> obterListaTransacoes(
+    public ResponseEntity<Page<MovimentacaoResource>> obterLista(
             @PageableDefault(sort = {"dataMovimentacao"}) Pageable paginacao,
             @Parameter(description = "Data da movimentação", example = "2023-05-22")
             @RequestParam(required = false) String dataMovimentacao,
             @RequestParam TipoOperacao tipoOperacao) {
 
-        Page<MovimentacaoResource> listagemTransacoesResponses =
-        		movimentacaoService.obterListaTransacoes(paginacao, dataMovimentacao, tipoOperacao);
-        if(null == listagemTransacoesResponses){
+        Page<MovimentacaoResource> response =
+        		movimentacaoService.obterLista(paginacao, dataMovimentacao, tipoOperacao);
+        if(null == response){
             return new ResponseEntity<Page<MovimentacaoResource>>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(listagemTransacoesResponses);
+        return ResponseEntity.ok(response);
     }
     
     @PostMapping("/depositos")
