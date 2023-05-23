@@ -40,34 +40,24 @@ public class SaqueService {
 	}
 
 	public Taxa verificaTaxa(SaqueResource saqueResource, Cliente cliente) {
-		BigDecimal taxa = BigDecimal.ZERO;
-		BigDecimal valor = saqueResource.getValor();
-		BigDecimal cem = new BigDecimal("100");
-		BigDecimal trezentos = new BigDecimal("300");
-		boolean bTaxa = false;
-		TTaxa regraAplicada = TTaxa.NENHUM;
+	    BigDecimal valor = saqueResource.getValor();
+	    BigDecimal cem = new BigDecimal("100");
+	    BigDecimal trezentos = new BigDecimal("300");
+	    boolean bTaxa = true;
+	    TTaxa regraAplicada = TTaxa.NENHUM;
 
-		if (valor.compareTo(cem) < 0) {
-			taxa = BigDecimal.ZERO;
-			regraAplicada = TTaxa.NENHUM;
-		} else if (valor.compareTo(trezentos) < 0) {
-			taxa = new BigDecimal("0.004");
-			bTaxa = true;
-			regraAplicada = TTaxa.ENTRE100E300;
-		} else {
-			taxa = new BigDecimal("0.01");
-			bTaxa = true;
-			regraAplicada = TTaxa.MAIOR300;
-		}
+	    if (cliente.getPlanoExclusive()) {
+	        return new Taxa(valor, valor, TTaxa.EXCLUSIVE, false);
+	    }
 
-		if (cliente.getPlanoExclusive()) {
-			taxa = BigDecimal.ZERO;
-			bTaxa = false;
-			regraAplicada = TTaxa.EXCLUSIVE;
-		}
+	    BigDecimal taxa = valor.compareTo(cem) < 0 ? BigDecimal.ZERO :
+	            valor.compareTo(trezentos) < 0 ? new BigDecimal("0.004") : new BigDecimal("0.01");
 
-		BigDecimal valorComTaxa = valor.add(valor.multiply(taxa));
+	    BigDecimal valorComTaxa = valor.add(valor.multiply(taxa));
+	    regraAplicada = valor.compareTo(cem) < 0 ? TTaxa.NENHUM :
+	            valor.compareTo(trezentos) < 0 ? TTaxa.ENTRE100E300 : TTaxa.MAIOR300;
 
-		return new Taxa(valor, valorComTaxa, regraAplicada, bTaxa);
+	    return new Taxa(valor, valorComTaxa, regraAplicada, bTaxa);
 	}
+
 }
