@@ -20,7 +20,22 @@ public class MovimentacaoResource  extends RepresentationModel<MovimentacaoResou
     private LocalDate dataTransacao;
     private Boolean cobradoTaxa;
     private BigDecimal valorOperacao;
-    private TTaxa regraAplicada;
+    public MovimentacaoResource() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public MovimentacaoResource(Iterable<Link> initialLinks) {
+		super(initialLinks);
+		// TODO Auto-generated constructor stub
+	}
+
+	public MovimentacaoResource(Link initialLink) {
+		super(initialLink);
+		// TODO Auto-generated constructor stub
+	}
+
+	private TTaxa regraAplicada;
 
 
     public MovimentacaoResource(Movimentacao transacao) {
